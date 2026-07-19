@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+func newRouter() *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/hello", func(c *gin.Context) {
@@ -16,7 +16,19 @@ func main() {
 		})
 	})
 
+	router.GET("/healthz", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "ok",
+		})
+	})
+
+	return router
+}
+
+func main() {
+	router := newRouter()
+
 	if err := router.Run(":8080"); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to run server: %v", err)
 	}
 }
